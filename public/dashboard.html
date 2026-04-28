@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskionix - Dashboard Premium</title>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Premium Style -->
+    <link rel="stylesheet" href="/css/dashboard.css?v=7">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Glowing Background Orbs -->
+        <div class="glow-orb purple-orb"></div>
+        <div class="glow-orb orange-orb"></div>
+        <div class="glow-orb cyan-orb"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar glass-panel">
+            <div class="logo-container" style="text-align: center;">
+                <img src="/img/logo.png" alt="Logo" class="logo">
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-view="dashboard"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+                
+                <div class="mt-4">
+                    <div class="text-muted small fw-bold px-3 mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">TAREAS</div>
+                    <a href="#" class="nav-item" data-view="activas"><i class="bi bi-circle"></i> Activas</a>
+                    <a href="#" class="nav-item" data-view="completadas"><i class="bi bi-check2-circle"></i> Completadas</a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+                <div class="d-flex align-items-center justify-content-between pt-3 border-top" style="border-color: rgba(0,0,0,0.05) !important;">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="user-details">
+                            <span id="userEmailLabel" class="fw-bold" style="font-size: 0.85rem; word-break: break-all; line-height: 1.2;">usuario@taskionix.com</span>
+                        </div>
+                    </div>
+                    <button id="logoutBtn" class="btn-icon text-danger" title="Cerrar sesión">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar d-flex justify-content-between align-items-center gap-3 mb-5">
+                <div class="search-bar glass-panel m-0" style="flex: 1;">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar tareas...">
+                </div>
+                <!-- Server Port Indicator -->
+                <div id="serverPortBadge" class="glass-panel px-4 py-2 d-flex flex-column align-items-center gap-1 m-0" style="border-radius: 16px; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); min-width: 200px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite;"></div>
+                        <span class="fw-bold" style="color: #059669; font-size: 0.85rem;">Puerto: <span id="currentPortLabel">---</span></span>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.75rem; font-weight: 600;">ID Servidor: <span id="serverIDLabel" class="text-dark">Detectando...</span></span>
+                </div>
+                <button class="btn-premium d-flex align-items-center gap-2 m-0" onclick="openCreateModal()">
+                    <i class="bi bi-plus-lg"></i> Nueva Tarea
+                </button>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="header-section animate-reveal" id="pageHeader">
+                    <h1 class="page-title">Bienvenido a tu Espacio de Trabajo</h1>
+                    <p class="page-subtitle">Organiza tus proyectos y aumenta tu productividad hoy.</p>
+                </div>
+
+                <!-- Stats Dashboard -->
+                <div id="statsPanel" class="premium-stats-card animate-reveal stagger-1 mb-5 p-4">
+                    <div class="row align-items-center position-relative" style="z-index: 2;">
+                        <div class="col-md-7">
+                            <h3 class="fw-bold text-dark mb-2">Tu Progreso</h3>
+                            <p class="text-muted mb-4">Mantén el ritmo, estás haciendo un trabajo increíble hoy.</p>
+                            <div class="d-flex gap-4">
+                                <div>
+                                    <h2 class="fw-bold text-purple mb-0" id="statCompleted">0</h2>
+                                    <span class="text-muted small">Completadas</span>
+                                </div>
+                                <div>
+                                    <h2 class="fw-bold text-dark mb-0" id="statPending">0</h2>
+                                    <span class="text-muted small">Pendientes</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 d-flex justify-content-center">
+                            <div style="width: 150px; height: 150px; position: relative;" class="chart-container-glow">
+                                <canvas id="statsChart"></canvas>
+                                <!-- Chart Center Text -->
+                                <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                    <span class="fw-bold text-dark d-block" id="statPercentage" style="font-size: 1.3rem;">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="tasks-container animate-reveal stagger-2">
+                    <h2 class="section-title" id="taskListTitle"><i class="bi bi-clock-history me-2"></i> Agregadas Recientemente</h2>
+                    <div id="taskCardsContainer" class="tasks-list">
+                        <!-- Loading State -->
+                        <div class="text-center py-5">
+                            <div class="spinner-grow text-purple" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Trash Bin Icon -->
+        <div id="trashBin" class="floating-trash-bin">
+            <i class="bi bi-trash3-fill"></i>
+        </div>
+    </div>
+
+    <!-- Create Modal (Glassmorphic) -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-modal">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">Nueva Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <form id="taskForm">
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold mb-2">NOMBRE DE LA TAREA</label>
+                            <input type="text" class="form-control premium-input" id="taskTitle" placeholder="Ej. Terminar reporte mensual..." autocomplete="off" required>
+                        </div>
+                        <button type="submit" class="btn-premium w-100">Crear Tarea</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal (Glassmorphic) -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-modal">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark">Actualizar Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <input type="hidden" id="editTaskId">
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold mb-2">NOMBRE DE LA TAREA</label>
+                        <input type="text" class="form-control premium-input" id="editTaskTitle" autocomplete="off" required>
+                    </div>
+                    <button type="button" class="btn-premium w-100" id="saveTaskBtn">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/dashboard.js?v=7"></script>
+</body>
+</html>
