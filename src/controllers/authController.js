@@ -4,25 +4,30 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
-  
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email y password son requeridos' });
-  }
-
   try {
+    const { email, password } = req.body;
+
+    console.log("BODY:", req.body);
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Datos incompletos" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const result = await db.query(
       'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email',
       [email, hashedPassword]
     );
-    res.status(201).json({ message: 'Usuario registrado con éxito', user: result.rows[0] });
+
+    res.json({
+      message: "Usuario creado",
+      user: result.rows[0]
+    });
+
   } catch (error) {
-    console.error("🔥 ERROR REGISTER:", error);
-    if (error.code === '23505') {
-      return res.status(400).json({ message: 'El email ya está registrado' });
-    }
-    res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    console.error("ERROR REGISTER:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 
