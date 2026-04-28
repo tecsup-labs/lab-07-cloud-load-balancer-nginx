@@ -10,9 +10,11 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-  console.log('Conectado a la base de datos PostgreSQL');
+  console.log('✅ Conectado a la base de datos PostgreSQL');
 });
 
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-};
+pool.on('error', (err) => {
+  console.error('🔥 PG ERROR:', err);
+});
+
+module.exports = pool;
