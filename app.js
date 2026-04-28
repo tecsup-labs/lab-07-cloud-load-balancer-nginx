@@ -46,6 +46,10 @@ app.get('/api/status', (req, res) => {
   });
 });
 
+// Mount Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+
 // Serve frontend
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
 app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'public', 'register.html')));
