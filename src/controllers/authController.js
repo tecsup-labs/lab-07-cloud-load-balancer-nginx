@@ -5,9 +5,9 @@ require('dotenv').config();
 
 exports.register = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
     console.log("BODY:", req.body);
+
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: "Datos incompletos" });
@@ -20,14 +20,16 @@ exports.register = async (req, res) => {
       [email, hashedPassword]
     );
 
-    res.json({
+    return res.status(201).json({
       message: "Usuario creado",
       user: result.rows[0]
     });
 
   } catch (error) {
     console.error("ERROR REGISTER:", error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message
+    });
   }
 };
 
